@@ -12,3 +12,6 @@ torch
 matplotlib
 numpy
 kornia
+dvc
+dvc[gdrive]
+scikit-learn
