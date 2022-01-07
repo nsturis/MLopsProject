@@ -1,0 +1,29 @@
+image:
+  height: 416
+  width: 416
+  channels: 3
+
+model:
+  lr: 1e-4
+  batch_size: 32
+  dropout: 0.2
+  classes: 2
+
+conv_layers:
+  - conv1:
+    out_channels: 16
+    kernel_size: 3
+    stride: 1
+    padding: 1
+    
+  - conv2:
+    out_channels: 32
+    kernel_size: 3
+    stride: 1
+    padding: 1
+
+
+maxpool:
+  kernel_size: 3
+  stride: 1
+  padding: 1
