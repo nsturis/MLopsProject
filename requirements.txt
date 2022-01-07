@@ -15,3 +15,4 @@ kornia
 dvc
 dvc[gdrive]
 scikit-learn
+glob2
