@@ -1,11 +1,13 @@
 It's raining cats and dogs
 ==============================
-Authors:
+**Authors**:
 - Asger Sturis Tang: s184305
 - Frederik Møller Sørensen: s184306
 - Jesper Hauch: s174227
 - Laurine Marie Celine Dargaud: s212803
 - Noah Reinert Sturis: s154407
+
+**Project Description**
 
 Our exam project for 02476 Machine Learning Operations will utilize the computer vision library `kornia` in object detection of cats or dogs. The overall goal of the project is to create a Kornia [transformer](https://kornia.readthedocs.io/en/latest/applications/image_classification.html) which will be trained on the [cats-vs-dogs](https://www.kaggle.com/shaunthesheep/microsoft-catsvsdogs-dataset) dataset from Kaggle. 
 
