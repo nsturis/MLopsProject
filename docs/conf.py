@@ -185,7 +185,7 @@ latex_elements = {
 latex_documents = [
     ('index',
      'mlopsproject.tex',
-     u'It's raining cats and dogs Documentation',
+     u"It's raining cats and dogs Documentation",
      u"Cool Cats", 'manual'),
 ]
 
@@ -215,9 +215,9 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'mlopsproject', u'It's raining cats and dogs Documentation',
+    ('index', 'mlopsproject', u"It's raining cats and dogs Documentation",
      [u"Cool Cats"], 1)
-]
+     ]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False
@@ -229,8 +229,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'mlopsproject', u'It's raining cats and dogs Documentation',
-     u"Cool Cats", 'It's raining cats and dogs',
+    ('index', 'mlopsproject', u"It's raining cats and dogs Documentation",
+     u"Cool Cats", "It's raining cats and dogs",
      'A short description of the project.', 'Miscellaneous'),
 ]
 
