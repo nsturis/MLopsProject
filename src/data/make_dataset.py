@@ -7,7 +7,7 @@ import glob2
 import torch
 import numpy as np
 from PIL import Image
-import kornia.augmentation as K
+import kornia as K
 
 @click.command()
 @click.argument('input_folderpath', type=click.Path(exists=True))
@@ -32,7 +32,11 @@ def main(input_folderpath, output_folderpath):
     for file in (cat_filepath):
         # Read image
         try:
-            img = np.array(Image.open(file).convert("RGB"))
+            img = np.array(Image.open(file).convert("RGB")).astype(np.double)
+            img = torch.Tensor(img)
+            img = K.geometry.transform.warp_perspective(torch.permute(torch.Tensor(img)[None],(3,0,1,2)), torch.eye(3)[None], (224, 224))
+            # save img to file
+            #print(img.shape)
         except:
             print("Error reading image: " + file)
             continue
@@ -45,7 +49,7 @@ def main(input_folderpath, output_folderpath):
     for file in dog_filepath:
         # Read image
         try:
-            img = np.array(Image.open(file).convert("RGB"))
+            img = np.array(Image.open(file).convert("RGB")).astype(np.double)
         except:
             print("Error reading image: " + file)
             continue
