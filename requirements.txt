@@ -16,3 +16,4 @@ dvc
 dvc[gdrive]
 scikit-learn
 glob2
+pytorch-lightning
