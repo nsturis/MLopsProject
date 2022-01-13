@@ -28,7 +28,7 @@ def npz_transformation(list_files, aNumberOfFiles, npz_filename):
             print(len(images))
         # save npz of 1000 images
         if len(images)%aNumberOfFiles == 0:
-            np.savez(
+            np.savez_compressed(
                 f'{npz_filename}_{nb_files}', 
                 images=np.array(images), 
                 labels=np.array([npz_filename for _ in range (aNumberOfFiles)]))
@@ -36,7 +36,7 @@ def npz_transformation(list_files, aNumberOfFiles, npz_filename):
             images = []
             nb_files+=1
     # save the last bunch of images < 1000
-    np.savez(
+    np.savez_compressed(
         f'{npz_filename}_{nb_files}', 
         images=np.array(images), 
         labels=np.array([npz_filename for _ in range (len(images))]))
@@ -45,6 +45,5 @@ def npz_transformation(list_files, aNumberOfFiles, npz_filename):
     
 
 nb_images_per_file = 1000
-# CAT - DONE
-#npz_transformation(cat_files, nb_images_per_file, 'cat')
+npz_transformation(cat_files, nb_images_per_file, 'cat')
 npz_transformation(dog_files, nb_images_per_file, 'dog')
