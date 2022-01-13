@@ -12,13 +12,6 @@ from os.path import isfile, join
 
 from matplotlib import image
 
-path_data = 'C:/Users/Laurine/Downloads/PetImages/'
-path_cat = path_data+'Cat/'
-path_dog = path_data+'Dog/'
-
-cat_files = [path_cat+f for f in listdir(path_cat) if isfile(join(path_cat, f))]
-dog_files = [path_dog+f for f in listdir(path_dog) if isfile(join(path_dog, f))]
-
 def npz_transformation(list_files, aNumberOfFiles, npz_filename):
     images = []
     nb_files = 0
@@ -44,6 +37,14 @@ def npz_transformation(list_files, aNumberOfFiles, npz_filename):
     print(f'DONE - {npz_filename}')
     
 
-nb_images_per_file = 1000
-npz_transformation(cat_files, nb_images_per_file, 'cat')
-npz_transformation(dog_files, nb_images_per_file, 'dog')
+if __name__ == '__main__':
+    path_data = 'C:/Users/Laurine/Downloads/PetImages/'
+    path_cat = path_data+'Cat/'
+    path_dog = path_data+'Dog/'
+
+    cat_files = [path_cat+f for f in listdir(path_cat) if isfile(join(path_cat, f))]
+    dog_files = [path_dog+f for f in listdir(path_dog) if isfile(join(path_dog, f))]
+    
+    nb_images_per_file = 1000
+    npz_transformation(cat_files, nb_images_per_file, 'cat')
+    npz_transformation(dog_files, nb_images_per_file, 'dog')
