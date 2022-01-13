@@ -15,6 +15,7 @@ numpy
 kornia
 dvc
 dvc[gdrive]
+dvc[gs]
 scikit-learn
 glob2
 pytorch-lightning
