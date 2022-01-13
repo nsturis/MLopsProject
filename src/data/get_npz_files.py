@@ -44,6 +44,7 @@ def npz_transformation(list_files, aNumberOfFiles, npz_filename):
     print(f'DONE - {npz_filename}')
     
 
-nb_images_per_file = 1000
-npz_transformation(cat_files, nb_images_per_file, 'cat')
-npz_transformation(dog_files, nb_images_per_file, 'dog')
+if __name__ == '__main__':
+    nb_images_per_file = 1000
+    npz_transformation(cat_files, nb_images_per_file, 'cat')
+    npz_transformation(dog_files, nb_images_per_file, 'dog')
