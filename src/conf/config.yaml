@@ -22,7 +22,6 @@ conv_layers:
     stride: 1
     padding: 1
 
-
 maxpool:
   kernel_size: 3
   stride: 1

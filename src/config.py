@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 @dataclass
 class Image:
@@ -28,5 +29,5 @@ class Model:
 class DOGCATConfig:
     image: Image
     model: Model
-    conv_layers: list[ConvLayer]
+    conv_layers: List[ConvLayer]
     maxpool: MaxPool
