@@ -9,7 +9,7 @@ It's raining cats and dogs
 
 **Project Description**
 
-Our exam project for 02476 Machine Learning Operations will utilize the computer vision library `kornia` in object detection of cats or dogs. The overall goal of the project is to create a Kornia [transformer](https://kornia.readthedocs.io/en/latest/applications/image_classification.html) which will be trained on the [cats-vs-dogs](https://www.kaggle.com/shaunthesheep/microsoft-catsvsdogs-dataset) dataset from Kaggle. 
+Our exam project for 02476 Machine Learning Operations will utilize the computer vision library `kornia` in object detection of cats or dogs. The overall goal of the project is to create a convolutional neural network which will be trained on the [cats-vs-dogs](https://www.kaggle.com/shaunthesheep/microsoft-catsvsdogs-dataset) dataset from Kaggle. The Kornia framework will be used for augmentations/transformations of the images fed to the model.
 
 Initially, we will train a deep learning model on the cats-vs-dogs dataset, but our approach makes it easy to upscale the scope of the project, e.g. by adding more pictures of different animals or adding pictures with no objects. The 886 MB dataset consists of 12500 cat and 12500 dog pictures in different scales and resolutions. In addition to the Kornia transformers used for our deep learning model, we will utilize Kornia augmentations to enlarge our dataset.
 
