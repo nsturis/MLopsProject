@@ -53,12 +53,13 @@ def main(input_folderpath, output_folderpath):
         I = np.double(img)
         data_matrix.append(I)
         labels.append(1)
-    
+
     data_matrix = np.array(data_matrix)
     images = torch.from_numpy(data_matrix)
 
     torch.save(images, output_folderpath + '/animal_images.pt')
     torch.save(labels.long(), output_folderpath + '/animal_labels.pt')
+
 
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -71,4 +72,4 @@ if __name__ == '__main__':
     # load up the .env entries as environment variables
     load_dotenv(find_dotenv())
 
-    main()
+    main("data/raw", "data/processed")
