@@ -1,15 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import kornia.contrib as K
-import hydra
-from hydra.core.config_store import ConfigStore
 from src.config import DOGCATConfig
-from torchsummary import summary
 from pytorch_lightning import LightningModule
-
-cs = ConfigStore().instance()
-cs.store(name='dog_cat_config', node = DOGCATConfig)
 
 def compute_conv_dim(dim_size, kernel_size_conv, padding_conv, stride_conv):
     return int((dim_size - kernel_size_conv + 2 * padding_conv) / stride_conv + 1)
@@ -99,11 +92,3 @@ class Classifier(LightningModule):
         self.log("test_loss", loss, prog_bar=True)
         self.log("test_accuracy", acc, prog_bar=True)
         return loss
-
-@hydra.main(config_path='../conf', config_name='config')
-def summary_model(cfg: DOGCATConfig):
-    m = Classifier(cfg)
-    print(summary(m, (3,416,416)))
-
-if __name__ == '__main__':
-    summary_model()
