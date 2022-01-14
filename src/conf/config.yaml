@@ -1,3 +1,8 @@
+paths:
+  input_filepath: data/processed
+  figures_filepath: reports/figures
+  model_filepath: models
+
 image:
   height: 416
   width: 416
@@ -10,14 +15,12 @@ model:
   classes: 2
 
 conv_layers:
-  - conv1:
-    out_channels: 16
+  - out_channels: 16
     kernel_size: 3
     stride: 1
     padding: 1
     
-  - conv2:
-    out_channels: 32
+  - out_channels: 32
     kernel_size: 3
     stride: 1
     padding: 1

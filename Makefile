@@ -31,7 +31,7 @@ data: requirements
 
 ## Make train
 train: requirements
-	$(PYTHON_INTERPRETER) src/models/train_model.py data/processed reports/figures models
+	$(PYTHON_INTERPRETER) src/models/train_model.py
 
 ## Delete all compiled Python files
 clean:

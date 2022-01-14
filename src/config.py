@@ -1,5 +1,12 @@
 from dataclasses import dataclass
 from typing import List
+from hydra.core.config_store import ConfigStore
+
+@dataclass
+class Paths:
+    input_filepath: str
+    figures_filepath: str
+    model_filepath: str
 
 @dataclass
 class Image:
@@ -31,3 +38,12 @@ class DOGCATConfig:
     model: Model
     conv_layers: List[ConvLayer]
     maxpool: MaxPool
+    paths: Paths
+
+
+def register_configs() -> None:
+    cs = ConfigStore.instance()
+    cs.store(
+        name="dog_cat_config",
+        node=DOGCATConfig
+    )

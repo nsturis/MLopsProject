@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from distutils.command.config import config
 import click
 import logging
 from pathlib import Path
@@ -12,63 +13,36 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from torch.utils.data import TensorDataset, DataLoader
-from model import MyAwesomeModel
+from model import Classifier
+from pytorch_lightning import Trainer
+from pytorch_lightning.loggers import WandbLogger
+from src.config import DOGCATConfig, register_configs
+import hydra
+from hydra.core.config_store import ConfigStore
 
+register_configs()
 
-@click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('figures_filepath', type=click.Path(exists=True))
-@click.argument('model_filepath', type=click.Path(exists=True))
-def main(input_filepath,figures_filepath ,model_filepath):
+# data/processed reports/figures models
+@hydra.main(config_path="../conf", config_name="config")
+def main(cfg: DOGCATConfig):
     print("Training day and night")
-    parser = argparse.ArgumentParser(description='Training arguments')
-    parser.add_argument('--lr', default=0.0001)
-    # add any additional argument that you want
-    args = parser.parse_args(sys.argv[4:])
-    print(args)
+
+    print(cfg)
+
+    input()
     
-
-    model = MyAwesomeModel()
-    train_images = torch.load(input_filepath + '/train_images.pt')
-    train_labels = torch.load(input_filepath + '/train_labels.pt')
-    train_set = TensorDataset(train_images,train_labels)
-
-    train_loader = DataLoader(train_set, batch_size=64, shuffle=True)
+    wandb_logger = WandbLogger(project='MLOps', entity='mlops_flajn', name = 'Initial tests')
+    wandb_logger.experiment.config.update(cfg)
     
+    train_data = "TBD"
+    test_data = "TBD"
 
-    criterion = torch.nn.CrossEntropyLoss()
-    optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-    epochs = 5
-    AccToSave = []
-    LossToSave = []
-    for e in range(epochs):
-        running_loss = 0
-        for images, labels in train_loader:
-            optimizer.zero_grad()
-            
-            log_ps = model(images)
-            loss = criterion(log_ps, labels)
-            
-            running_loss += loss.item()
+    model = Classifier(cfg)
 
-            loss.backward()
-            optimizer.step()
-
-        else:
-            ps = torch.exp(log_ps)
-            top_p, top_class = ps.topk(1, dim=1)
-            equals = top_class == labels.view(*top_class.shape)
-            accuracy = torch.mean(equals.type(torch.FloatTensor))
-            AccToSave.append(accuracy)
-            LossToSave.append(loss.detach().numpy())
-            print(f'Epoch: {e}----------- Loss: {loss} -------------- Accuracy: {accuracy.item()*100}%')
-            # print(f'Accuracy: {accuracy.item()*100}%')
-            # print(f'Loss: {loss}')
+    trainer = Trainer(logger = wandb_logger, gpu=-1, max_epochs=500, log_every_n_steps=100)
+    trainer.fit(model, train_data, test_data)
+    trainer.save_checkpoint()
     
-    plt.plot(AccToSave)
-    plt.plot(LossToSave)
-    plt.savefig(figures_filepath + '/EvaluationMetrics.png')
-    torch.save(model.state_dict(), model_filepath + '/TrainedModel.pth')
     
 if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'

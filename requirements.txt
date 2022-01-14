@@ -22,3 +22,4 @@ pytorch-lightning
 hydra-core
 albumentations
 torchvision
+setuptools==59.5.0
