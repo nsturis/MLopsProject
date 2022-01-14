@@ -20,3 +20,5 @@ scikit-learn
 glob2
 pytorch-lightning
 hydra-core
+albumentations
+torchvision

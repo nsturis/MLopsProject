@@ -7,11 +7,37 @@ import glob2
 import torch
 import numpy as np
 from PIL import Image
+import PIL
 import kornia as K
+import albumentations as A
+from albumentations.augmentations.geometric import LongestMaxSize
+from albumentations.pytorch.transforms import ToTensorV2
+import hydra
+from hydra.core.config_store import ConfigStore
+from src.config import DOGCATConfig
+
+
+def parse_images(file_path, augmentations, data_matrix, labels, c):
+    for file in (file_path):
+        # Read image
+        try:
+            img = np.array(Image.open(file).convert("RGB")).astype(np.double)
+            img = augmentations(image = img)['image']
+
+        except PIL.UnidentifiedImageError:
+            print("Error reading image: " + file)
+            continue
+        
+        data_matrix.append(img)
+        labels.append(c)
+    
+    return data_matrix, labels
+
 
 @click.command()
 @click.argument('input_folderpath', type=click.Path(exists=True))
 @click.argument('output_folderpath', type=click.Path(exists=True))
+
 def main(input_folderpath, output_folderpath):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
@@ -29,34 +55,15 @@ def main(input_folderpath, output_folderpath):
 
     data_matrix = []
     labels = []
-    for file in (cat_filepath):
-        # Read image
-        try:
-            img = np.array(Image.open(file).convert("RGB")).astype(np.double)
-            img = torch.Tensor(img)
-            img = K.geometry.transform.warp_perspective(torch.permute(torch.Tensor(img)[None],(3,0,1,2)), torch.eye(3)[None], (224, 224))
-            # save img to file
-            #print(img.shape)
-        except:
-            print("Error reading image: " + file)
-            continue
-        # Double-precision floating
-        I = np.double(img)
 
-        data_matrix.append(I)
-        labels.append(0)
+    augmentations = A.Compose([
+        LongestMaxSize(416),
+        A.PadIfNeeded(416, 416),
+        ToTensorV2()
+    ])
 
-    for file in dog_filepath:
-        # Read image
-        try:
-            img = np.array(Image.open(file).convert("RGB")).astype(np.double)
-        except:
-            print("Error reading image: " + file)
-            continue
-        # Double-precision floating
-        I = np.double(img)
-        data_matrix.append(I)
-        labels.append(1)
+    data_matrix, labels = parse_images(cat_filepath, augmentations, data_matrix, labels, 0)
+    data_matrix, labels = parse_images(dog_filepath, augmentations, data_matrix, labels, 1)
 
     data_matrix = np.array(data_matrix)
     images = torch.from_numpy(data_matrix)
