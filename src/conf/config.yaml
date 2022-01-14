@@ -4,8 +4,8 @@ paths:
   model_filepath: models
 
 image:
-  height: 416
-  width: 416
+  height: 200
+  width: 200
   channels: 3
 
 model:

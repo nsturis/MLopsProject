@@ -63,7 +63,7 @@ class Classifier(LightningModule):
         return torch.nn.CrossEntropyLoss(X, y)
     
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters, lr=self.cfg.model.lr)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.cfg.model.lr)
         return optimizer
     
     def training_step(self, train_batch, batch_idx):

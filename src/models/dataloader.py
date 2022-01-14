@@ -6,36 +6,36 @@ import pytorch_lightning as pl
 import kornia.augmentation as K
 import numpy as np
 
-class AnimalDataset(Dataset):
-    def __init__(self, data_path, image_size, transform):
-        self.images = torch.load(data_path + "/animal_images.pt")
-        self.labels = torch.load(data_path + "/animal_labels.pt")
-        self.height = image_size
-        self.width = image_size
-        self.transform = transform
+# class AnimalDataset(Dataset):
+#     def __init__(self, data_path, data_split, image_size, transform):
+#         self.images = torch.load(data_path + "/" + data_split + "_images.pt")
+#         self.labels = torch.load(data_path + "/" + data_split + "_labels.pt")
+#         self.height = image_size
+#         self.width = image_size
+#         self.transform = transform
 
-    def __len(self):
-        return len(self.images)
+#     def __len(self):
+#         return len(self.images)
 
-    def __getitem__(self, idx):
-        image = self.images[idx]
-        label = self.labels[idx]
+#     def __getitem__(self, idx):
+#         image = self.images[idx]
+#         label = self.labels[idx]
 
-        if self.transform:
-            img = self.transforms(image)
+#        # if self.transform:
+#         #    image = self.transform(image)
 
-        return img, label
+#         return image, label
         
-
 class AnimalDataModule(pl.LightningDataModule):
-    def __init__(self, batch_size, data_dir, image_size):
+    def __init__(self, batch_size, data_dir, image_size, num_workers):
         super().__init__()
         self.batch_size = batch_size
         self.data_dir = data_dir
         self.image_size = image_size
+        self.num_workers = num_workers
 
         self.train_transform = nn.Sequential(
-            K.RandomHorizontalFlip(0.5),
+            #K.RandomHorizontalFlip(0.5),
             K.Normalize(torch.zeros(3), torch.ones(3))
         )
 
@@ -43,15 +43,30 @@ class AnimalDataModule(pl.LightningDataModule):
             K.Normalize(torch.zeros(3), torch.ones(3))
         )
 
-    def get_dataloaders(self):
-        dataset = AnimalDataset(data_dir = self.data_dir, image_size = self.image_size, transform = self.train_transform)
-        train_split = 0.8
-        train_size = int(train_split * len(dataset))
-        val_size = len(dataset) - train_size
-        train_dataset, val_dataset = random_split(dataset, [train_size, val_size], generator=torch.Generator().manual_seed(42))
-        train_dataloader = DataLoader(train_dataset, batch_size = self.batch_size)
-        val_dataloader = DataLoader(val_dataset, batch_size = self.batch_size)
-        return train_dataloader, val_dataloader
+
+    def train_dataloader(self):
+        dataset = torch.load(self.data_dir + '/train_data.pt')
+        dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+        #dataloader = self.train_transform(dataloader)
+        # Impelemt transforms in train_step
+        return dataloader
+    
+    def val_dataloader(self):
+        dataset = torch.load(self.data_dir + '/val_data.pt')
+        dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+        #dataloader = self.val_transform(dataloader)
+        return dataloader
+    
+    def test_dataloader(self):
+        dataset = torch.load(self.data_dir + '/test_data.pt')
+        dataloader = DataLoader(dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
+        #dataloader = self.val_transform(dataloader)
+        return dataloader
 
 if __name__ == "__main__":
-    print("Y")
+    data_module = AnimalDataModule(batch_size=4, data_dir='data/processed', image_size=200, num_workers=4)
+    train_loader, val_loader, test_loader = data_module.train_dataloader(), data_module.val_dataloader(), data_module.test_dataloader()
+    for i, (images, labels) in enumerate(train_loader):
+        print(images.shape)
+        print(labels.shape)
+        break

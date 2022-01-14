@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from distutils.command.config import config
+import os
 import click
 import logging
 from pathlib import Path
@@ -19,6 +20,8 @@ from pytorch_lightning.loggers import WandbLogger
 from src.config import DOGCATConfig, register_configs
 import hydra
 from hydra.core.config_store import ConfigStore
+from hydra.utils import get_original_cwd
+from src.models.dataloader import AnimalDataModule
 
 register_configs()
 
@@ -29,18 +32,20 @@ def main(cfg: DOGCATConfig):
 
     print(cfg)
 
-    input()
+    print(os.getcwd())
+
+   # input()
     
-    wandb_logger = WandbLogger(project='MLOps', entity='mlops_flajn', name = 'Initial tests')
-    wandb_logger.experiment.config.update(cfg)
+    #wandb_logger = WandbLogger(project='MLOps', entity='mlops_flajn', name = 'Initial tests')
+    #wandb_logger.experiment.config.update(cfg)
     
-    train_data = "TBD"
-    test_data = "TBD"
+    data_module = AnimalDataModule(batch_size=4, data_dir=get_original_cwd() + "/" + cfg.paths.input_filepath, image_size=200, num_workers=4)
+    train_loader, val_loader, test_loader = data_module.train_dataloader(), data_module.val_dataloader(), data_module.test_dataloader()
 
     model = Classifier(cfg)
 
-    trainer = Trainer(logger = wandb_logger, gpu=-1, max_epochs=500, log_every_n_steps=100)
-    trainer.fit(model, train_data, test_data)
+    trainer = Trainer(gpus=0, max_epochs=500, log_every_n_steps=100)
+    trainer.fit(model, train_loader, val_loader)
     trainer.save_checkpoint()
     
     
