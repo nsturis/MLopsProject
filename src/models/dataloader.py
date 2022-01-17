@@ -31,11 +31,11 @@ class DogCatDataset(Dataset):
         if "Cat" in image_idx:
             label = 1
         
-        #torchvision.utils.save_image(image, "test.png", normalize=True)
+        torchvision.utils.save_image(image, "test.png", normalize=True)
         if self.transform:
             image = self.transform(image)
         
-        #torchvision.utils.save_image(image, "test2.png", normalize=True)
+        torchvision.utils.save_image(image, "test2.png", normalize=True)
         return image, label
         
 class AnimalDataModule(pl.LightningDataModule):
@@ -46,10 +46,15 @@ class AnimalDataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.train_transform = K.container.AugmentationSequential(
+            K.RandomResizedCrop(p=0.5, size=(self.image_size, self.image_size), scale=(0.6, 0.6)),
             K.RandomHorizontalFlip(p=0.5),
+            K.RandomChannelShuffle(p=0.5),
+            K.RandomPerspective(p=0.5),
+            K.RandomRotation(p=0.5, degrees=45),
             K.Normalize(torch.zeros(1), torch.tensor([255])),
             data_keys = ["input"],
-            return_transform=False
+            return_transform=False,
+            same_on_batch=False,
         )
 
         self.val_transform = K.container.AugmentationSequential(
