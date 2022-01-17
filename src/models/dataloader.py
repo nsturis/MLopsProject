@@ -31,11 +31,11 @@ class DogCatDataset(Dataset):
         if "Cat" in image_idx:
             label = 1
         
-        torchvision.utils.save_image(image, "test.png", normalize=True)
+        #torchvision.utils.save_image(image, "test.png", normalize=True)
         if self.transform:
             image = self.transform(image)
         
-        torchvision.utils.save_image(image, "test2.png", normalize=True)
+        #torchvision.utils.save_image(image, "test2.png", normalize=True)
         return image, label
         
 class AnimalDataModule(pl.LightningDataModule):
