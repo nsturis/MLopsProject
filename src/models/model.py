@@ -94,10 +94,8 @@ class Classifier(LightningModule):
 
     def forward(self, x):
         if x.ndim != 4:
-            raise ValueError("Expected input to a 4D tensor")
-        if x.shape[1] != 1 or x.shape[2] != 28 or x.shape[3] != 28:
-            raise ValueError("Expected each sample to have shape [1, 28, 28]")
-
+            raise ValueError('Expected input to a 4D tensor')
+            
         for layer in self.layers:
             x = self.maxpool(F.relu(layer(x)))
 
@@ -106,8 +104,9 @@ class Classifier(LightningModule):
         return F.softmax(self.out(x), dim=1)
 
     def loss(self, X, y):
-        return torch.nn.CrossEntropyLoss(X, y)
-
+        loss = torch.nn.CrossEntropyLoss()
+        return loss(X, y)
+    
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.cfg.model.lr)
         return optimizer
