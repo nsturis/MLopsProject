@@ -12,8 +12,7 @@ class Paths:
 
 @dataclass
 class Image:
-    height: int
-    width: int
+    size: int
     channels: int
 
 
