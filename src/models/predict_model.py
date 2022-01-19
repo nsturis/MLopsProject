@@ -50,7 +50,7 @@ def main(cfg: DOGCATConfig):
             file_name,
             labels_dict[labels[i].item()],
             wandb.Image(raw_img),
-            wandb.Image(images[i].permute(1, 2, 0).numpy()),
+            wandb.Image(images[i]),
             labels_dict[predictions[i].item()]
         ])
     wandb_logger.log_table(key='first_batch_prediction', columns=columns, data=data)
