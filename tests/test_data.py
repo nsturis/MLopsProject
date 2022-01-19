@@ -31,7 +31,7 @@ def get_config():
 def get_dataloaders():
     """ Initialisation : get dataloaders """
     cfg = OmegaConf.load('src/conf/config.yaml')
-    data_module = AnimalDataModule(batch_size=cfg.model.batch_size, data_dir=f"{_PATH_DATA}/processed/", image_size=cfg.image.width, num_workers=os.cpu_count())
+    data_module = AnimalDataModule(batch_size=cfg.model.batch_size, data_dir=f"{_PATH_DATA}/processed/", image_size=cfg.image.size, num_workers=os.cpu_count())
     train_loader, val_loader, test_loader = data_module.train_dataloader(), data_module.val_dataloader(), data_module.test_dataloader()
     return train_loader, val_loader, test_loader
 
@@ -47,8 +47,8 @@ def test_image_shape(get_dataloaders, get_config):
         dataiter = iter(aDataLoader)
         images, _ = next(dataiter)
         assert len(images.shape) == 4, "Images are not a 4D tensor"
-        assert images.shape[2] == cfg.image.width, "Image size is incorrect"
-        assert images.shape[3] == cfg.image.width, "Image size is incorrect"
+        assert images.shape[2] == cfg.image.size, "Image size is incorrect"
+        assert images.shape[3] == cfg.image.size, "Image size is incorrect"
     
     loader_check_shape(train_loader)
     loader_check_shape(test_loader)
