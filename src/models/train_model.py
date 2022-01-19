@@ -1,27 +1,16 @@
 # -*- coding: utf-8 -*-
-from distutils.command.config import config
 import os
-import click
 import logging
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
-import glob
-import torch
-import argparse
-import sys
-
-import numpy as np
-import matplotlib.pyplot as plt
-
-from torch.utils.data import TensorDataset, DataLoader
 from model import Classifier
 from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import WandbLogger
 from src.config import DOGCATConfig, register_configs
 import hydra
-from hydra.core.config_store import ConfigStore
 from hydra.utils import get_original_cwd
 from src.data.dataloader import AnimalDataModule
+from google.cloud import secretmanager
 
 register_configs()
 
@@ -31,6 +20,10 @@ def main(cfg: DOGCATConfig):
     print("Training day and night")
 
     print(cfg)
+    PROJECT_ID = 'onyx-glider-337908'
+    secrets = secretmanager.SecretManagerServiceClient()
+    WANDB_KEY = secrets.access_secret_version(request={"name": "projects/"+PROJECT_ID+"/secrets/wandb_api_key/versions/1"}).payload.data.decode("utf-8")
+    os.environ['WANDB_API_KEY'] = WANDB_KEY
 
     wandb_logger = WandbLogger(project='MLOps', entity='mlops_flajn', name = 'Initial tests')
     wandb_logger.experiment.config.update(cfg)

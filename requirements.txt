@@ -24,3 +24,4 @@ albumentations
 torchvision
 setuptools==59.5.0
 wandb
+google-cloud-secret-manager
