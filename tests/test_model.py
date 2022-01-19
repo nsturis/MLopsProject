@@ -11,8 +11,8 @@ def test_model_structure():
         parameters = yaml.load(file, Loader=yaml.FullLoader)
 
     img = Image(
-        height=parameters["image"]["height"],
-        width=parameters["image"]["width"],
+        height=parameters["image"]["size"],
+        width=parameters["image"]["size"],
         channels=parameters["image"]["channels"],
     )
     pool = MaxPool(
