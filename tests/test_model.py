@@ -3,6 +3,7 @@ import hydra
 from hydra.core.config_store import ConfigStore
 from src.config import *
 import yaml
+import pytest
 
 def test_model_structure():
     with open('src/conf/config.yaml') as file:
@@ -49,10 +50,9 @@ def test_model_structure():
     
     for i in range(len(m.layers)-1):
         assert m.layers[i].out_channels == m.layers[i+1].in_channels
-    
 
-print("All good!")
-
+    with pytest.raises(ValueError, match='Expected input to a 4D tensor'):
+        m(torch.randn(1,2,3))
 
 
 

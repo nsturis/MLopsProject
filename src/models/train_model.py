@@ -21,7 +21,7 @@ from src.config import DOGCATConfig, register_configs
 import hydra
 from hydra.core.config_store import ConfigStore
 from hydra.utils import get_original_cwd
-from src.models.dataloader import AnimalDataModule
+from src.data.dataloader import AnimalDataModule
 
 register_configs()
 
@@ -32,10 +32,6 @@ def main(cfg: DOGCATConfig):
 
     print(cfg)
 
-    print(os.getcwd())
-
-   # input()
-    
     #wandb_logger = WandbLogger(project='MLOps', entity='mlops_flajn', name = 'Initial tests')
     #wandb_logger.experiment.config.update(cfg)
     
@@ -44,7 +40,7 @@ def main(cfg: DOGCATConfig):
 
     model = Classifier(cfg)
 
-    trainer = Trainer(gpus=0, max_epochs=500, log_every_n_steps=100)
+    trainer = Trainer(gpus=0, max_epochs=1, log_every_n_steps=100)
     trainer.fit(model, train_loader, val_loader)
     trainer.save_checkpoint()
     

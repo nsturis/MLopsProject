@@ -23,7 +23,7 @@ def parse_images(file_path, valid_files):
     for file in (file_path):
         # Read image
         try:
-            img = np.array(Image.open(file).convert("RGB")).astype(np.float32)
+            _ = np.array(Image.open(file).convert("RGB")).astype(np.float32)
             valid_files.append(file)
 
         except PIL.UnidentifiedImageError:
