@@ -29,7 +29,7 @@ def main(cfg: DOGCATConfig):
     wandb_logger.experiment.config.update(cfg)
     
     data_module = AnimalDataModule(batch_size=cfg.model.batch_size, data_dir=get_original_cwd() + "/" + cfg.paths.input_filepath, image_size=cfg.image.size, num_workers=os.cpu_count())
-    train_loader, val_loader, test_loader = data_module.train_dataloader(), data_module.val_dataloader(), data_module.test_dataloader()
+    train_loader, val_loader = data_module.train_dataloader(), data_module.val_dataloader()
 
     model = Classifier(cfg)
 
