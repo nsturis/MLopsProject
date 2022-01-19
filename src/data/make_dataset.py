@@ -17,17 +17,19 @@ from albumentations.pytorch.transforms import ToTensorV2
 from src.config import DOGCATConfig
 import random
 import json
+from pathlib import Path
 
 
 def parse_images(file_path, valid_files):
     for file in (file_path):
         # Read image
+        f = str(file)
         try:
-            _ = np.array(Image.open(file).convert("RGB")).astype(np.float32)
-            valid_files.append(file)
+            _ = np.array(Image.open(f).convert("RGB")).astype(np.float32)
+            valid_files.append(f)
 
         except PIL.UnidentifiedImageError:
-            print("Error reading image: " + file)
+            print("Error reading image: " + f)
             continue
 
     
@@ -46,8 +48,8 @@ def main(input_folderpath, output_folderpath):
 
     input_folderpath = input_folderpath + "/PetImages"
 
-    cat_filepath = glob2.glob(input_folderpath + "/Cat/*.jpg")
-    dog_filepath = glob2.glob(input_folderpath + "/Dog/*.jpg")
+    cat_filepath = [Path(p).absolute() for p in glob2.glob(input_folderpath + "/Cat/*.jpg")]
+    dog_filepath = [Path(p).absolute() for p in glob2.glob(input_folderpath + "/Dog/*.jpg")]
 
     valid_files = []
     valid_files = parse_images(cat_filepath, valid_files)

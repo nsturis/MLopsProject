@@ -35,6 +35,7 @@ class DogCatDataset(Dataset):
         if self.transform:
             image = self.transform(image)
         
+
         #torchvision.utils.save_image(image, "test2.png", normalize=True)
         return image, label
         
@@ -55,12 +56,14 @@ class AnimalDataModule(pl.LightningDataModule):
             data_keys = ["input"],
             return_transform=False,
             same_on_batch=False,
+            keepdim=True
         )
 
         self.val_transform = K.container.AugmentationSequential(
             K.Normalize(torch.zeros(1), torch.tensor([255])),
             data_keys = ["input"],
-            return_transform=False
+            return_transform=False,
+            keepdim=True
         )
 
     def train_dataloader(self):
@@ -81,4 +84,5 @@ if __name__ == "__main__":
     train_loader, val_loader, test_loader = data_module.train_dataloader(), data_module.val_dataloader(), data_module.test_dataloader()
 
     image, label = next(iter(train_loader))
+    print(image.shape)
 
