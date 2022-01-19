@@ -17,4 +17,5 @@ RUN python3 -m venv ${VIRUTALENV}
 ENV PATH="${VIRUTALENV}/bin:$PATH"
 COPY ./entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+RUN make requirements
 ENTRYPOINT ["/entrypoint.sh"]
