@@ -39,8 +39,8 @@ def test_model_structure():
     )
 
     paths = Paths(
-        input_filepath=parameters["paths"]["input_filepath"]
-        figures_filepath=parameters["paths"]["figures_filepath"]
+        input_filepath=parameters["paths"]["input_filepath"],
+        figures_filepath=parameters["paths"]["figures_filepath"],
         model_filepath=parameters["paths"]["model_filepath"]
     )
 

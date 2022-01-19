@@ -24,13 +24,13 @@ def test_processed_files_created():
 @pytest.fixture
 def get_config():
     """ Initialisation : get config file """
-    cfg = OmegaConf.load('../src/conf/config.yaml')
+    cfg = OmegaConf.load('src/conf/config.yaml')
     return cfg
 
 @pytest.fixture
 def get_dataloaders():
     """ Initialisation : get dataloaders """
-    cfg = OmegaConf.load('../src/conf/config.yaml')
+    cfg = OmegaConf.load('src/conf/config.yaml')
     data_module = AnimalDataModule(batch_size=cfg.model.batch_size, data_dir=f"{_PATH_DATA}/processed/", image_size=cfg.image.width, num_workers=os.cpu_count())
     train_loader, val_loader, test_loader = data_module.train_dataloader(), data_module.val_dataloader(), data_module.test_dataloader()
     return train_loader, val_loader, test_loader
