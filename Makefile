@@ -33,13 +33,17 @@ data: requirements
 visualization: requirements
 	$(PYTHON_INTERPRETER) src/visualization/visualize.py
 
-## Make train
+## Make Train
 train: requirements
 	$(PYTHON_INTERPRETER) src/models/train_model.py
 
+## Make Predict
+predict: requirements
+	$(PYTHON_INTERPRETER) src/models/predict_model.py
+
 ## Make Test
 test: requirements
-	$(PYTHON_INTERPRETER) src/models/predict_model.py
+	$(PYTHON_INTERPRETER) src/models/test_model.py
 
 ## Delete all compiled Python files
 clean:
