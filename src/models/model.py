@@ -140,3 +140,9 @@ class Classifier(LightningModule):
         self.log("test_loss", loss, prog_bar=True)
         self.log("test_accuracy", acc, prog_bar=True)
         return loss
+    
+    def predict_step(self, batch, batch_idx):
+        X, y = batch
+        logits = self.forward(X)
+        preds = torch.argmax(logits, dim=1)
+        return preds
