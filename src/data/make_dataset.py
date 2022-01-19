@@ -14,35 +14,29 @@ import kornia as K
 import albumentations as A
 from albumentations.augmentations.geometric import LongestMaxSize
 from albumentations.pytorch.transforms import ToTensorV2
-import hydra
-from hydra.core.config_store import ConfigStore
 from src.config import DOGCATConfig
+import random
+import json
 
-from torch.utils.data import TensorDataset, random_split
 
-
-def parse_images(file_path, augmentations, data_matrix, labels, c):
+def parse_images(file_path, valid_files):
     for file in (file_path):
         # Read image
         try:
             img = np.array(Image.open(file).convert("RGB")).astype(np.float32)
-            img = augmentations(image = img)['image']
-            
-            data_matrix.append(img)
-            labels.append(c)
+            valid_files.append(file)
 
         except PIL.UnidentifiedImageError:
             print("Error reading image: " + file)
             continue
 
     
-    return data_matrix, labels
+    return valid_files
 
 
 @click.command()
 @click.argument('input_folderpath', type=click.Path(exists=True))
 @click.argument('output_folderpath', type=click.Path(exists=True))
-
 def main(input_folderpath, output_folderpath):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
@@ -55,53 +49,24 @@ def main(input_folderpath, output_folderpath):
     cat_filepath = glob2.glob(input_folderpath + "/Cat/*.jpg")
     dog_filepath = glob2.glob(input_folderpath + "/Dog/*.jpg")
 
-    # 0 for cats, 1 for dogs
-#    labels = torch.concat((torch.zeros(len(cat_filepath)), torch.ones(len(dog_filepath))))
-
-    data_matrix = []
-    labels = []
-
-    augmentations = A.Compose([
-        LongestMaxSize(200),
-        A.PadIfNeeded(200, 200)
-        #ToTensorV2()
-    ])
-
-    data_matrix, labels = parse_images(cat_filepath, augmentations, data_matrix, labels, 0)
-    data_matrix, labels = parse_images(dog_filepath, augmentations, data_matrix, labels, 1)
-    # Create a vector of indices to permute the data into train, test and validation sets
-    # indices = np.arange(len(data_matrix))
-    # np.random.shuffle(indices, generator=np.random.default_rng(42))
-
-    # # Split the data into train, test and validation sets
-    # train_size = int(len(data_matrix) * 0.8)
-    # test_size = int(len(data_matrix) * 0.1)
-    # val_size = int(len(data_matrix) * 0.1)
-
-    # train_indices = indices[:train_size]
-    # test_indices = indices[train_size:train_size + test_size]
-    # valid_indices = indices[train_size + val_size:]
-    data_matrix = np.asarray(data_matrix)
-    data_matrix = torch.Tensor(data_matrix).permute(0, 3, 1, 2)
-    dataset = TensorDataset(data_matrix, torch.Tensor(labels))
-
+    valid_files = []
+    valid_files = parse_images(cat_filepath, valid_files)
+    valid_files = parse_images(dog_filepath, valid_files)
+    random.Random(42).shuffle(valid_files)
     train_split = 0.8
     test_split = 0.1
+    train_size = int(train_split * len(valid_files))
+    test_size = int(test_split * len(valid_files))
+    val_size = len(valid_files) - train_size - test_size
+    train_indices = valid_files[:train_size]
+    test_indices = valid_files[train_size:train_size + test_size]
+    valid_indices = valid_files[train_size + val_size:]
 
+    dict_split = {"training": train_indices, "validation": valid_indices, "testing": test_indices}
 
-    train_size = int(train_split * len(dataset))
-    test_size = int(test_split * len(dataset))
-    val_size = len(dataset) - train_size - test_size
-    
-    train_dataset, test_dataset, val_dataset = random_split(dataset, [train_size, test_size, val_size], generator=torch.Generator().manual_seed(42))
-
-    torch.save(train_dataset, output_folderpath + "/train_data.pt")
-    torch.save(test_dataset, output_folderpath + "/test_data.pt")
-    torch.save(val_dataset, output_folderpath + "/val_data.pt")
-
-
-    #torch.save(images, output_folderpath + '/animal_train_images.pt')
-    #torch.save(labels.long(), output_folderpath + '/animal_test_labels.pt')
+    with open(output_folderpath + '/datasplit.json', 'w') as f:
+        json.dump(dict_split, f)
+        f.close()
 
 
 if __name__ == '__main__':
