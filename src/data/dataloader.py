@@ -11,6 +11,7 @@ from PIL import Image
 import json
 import torchvision
 
+
 class DogCatDataset(Dataset):
     def __init__(self, data_split, data_dir, image_size, transform):
         with open(data_dir + "/datasplit.json", "r") as f:
@@ -30,14 +31,15 @@ class DogCatDataset(Dataset):
         label = 0
         if "Cat" in image_idx:
             label = 1
-        
-        #torchvision.utils.save_image(image, "test.png", normalize=True)
+
+        # torchvision.utils.save_image(image, "test.png", normalize=True)
         if self.transform:
             image = self.transform(image)
-        
-        #torchvision.utils.save_image(image, "test2.png", normalize=True)
+
+        # torchvision.utils.save_image(image, "test2.png", normalize=True)
         return image, label
-        
+
+
 class AnimalDataModule(pl.LightningDataModule):
     def __init__(self, data_dir, image_size, batch_size, num_workers):
         super().__init__()
@@ -46,39 +48,70 @@ class AnimalDataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.train_transform = K.container.AugmentationSequential(
-            K.RandomResizedCrop(p=0.5, size=(self.image_size, self.image_size), scale=(0.6, 0.6)),
+            K.RandomResizedCrop(
+                p=0.5, size=(self.image_size, self.image_size), scale=(0.6, 0.6)
+            ),
             K.RandomHorizontalFlip(p=0.5),
             K.RandomChannelShuffle(p=0.5),
             K.RandomPerspective(p=0.5),
             K.RandomRotation(p=0.5, degrees=45),
             K.Normalize(torch.zeros(1), torch.tensor([255])),
-            data_keys = ["input"],
+            data_keys=["input"],
             return_transform=False,
             same_on_batch=False,
         )
 
         self.val_transform = K.container.AugmentationSequential(
             K.Normalize(torch.zeros(1), torch.tensor([255])),
-            data_keys = ["input"],
-            return_transform=False
+            data_keys=["input"],
+            return_transform=False,
         )
 
     def train_dataloader(self):
-        return DataLoader(DogCatDataset("training", data_dir=self.data_dir, image_size=self.image_size, transform=self.train_transform), 
-        batch_size=self.batch_size, num_workers=self.num_workers)
-    
+        return DataLoader(
+            DogCatDataset(
+                "training",
+                data_dir=self.data_dir,
+                image_size=self.image_size,
+                transform=self.train_transform,
+            ),
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
+        )
+
     def val_dataloader(self):
-        return DataLoader(DogCatDataset("validation", data_dir=self.data_dir, image_size=self.image_size, transform=self.val_transform), 
-        batch_size=self.batch_size, num_workers=self.num_workers)
-    
+        return DataLoader(
+            DogCatDataset(
+                "validation",
+                data_dir=self.data_dir,
+                image_size=self.image_size,
+                transform=self.val_transform,
+            ),
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
+        )
+
     def test_dataloader(self):
-        return DataLoader(DogCatDataset("testing", data_dir=self.data_dir, image_size=self.image_size, transform=self.val_transform), 
-        batch_size=self.batch_size, num_workers=self.num_workers)
+        return DataLoader(
+            DogCatDataset(
+                "testing",
+                data_dir=self.data_dir,
+                image_size=self.image_size,
+                transform=self.val_transform,
+            ),
+            batch_size=self.batch_size,
+            num_workers=self.num_workers,
+        )
 
 
 if __name__ == "__main__":
-    data_module = AnimalDataModule(data_dir='data/processed', image_size=200, batch_size=4, num_workers=4)
-    train_loader, val_loader, test_loader = data_module.train_dataloader(), data_module.val_dataloader(), data_module.test_dataloader()
+    data_module = AnimalDataModule(
+        data_dir="data/processed", image_size=200, batch_size=4, num_workers=4
+    )
+    train_loader, val_loader, test_loader = (
+        data_module.train_dataloader(),
+        data_module.val_dataloader(),
+        data_module.test_dataloader(),
+    )
 
     image, label = next(iter(train_loader))
-

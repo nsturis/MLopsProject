@@ -20,7 +20,7 @@ import json
 
 
 def parse_images(file_path, valid_files):
-    for file in (file_path):
+    for file in file_path:
         # Read image
         try:
             _ = np.array(Image.open(file).convert("RGB")).astype(np.float32)
@@ -30,19 +30,18 @@ def parse_images(file_path, valid_files):
             print("Error reading image: " + file)
             continue
 
-    
     return valid_files
 
 
 @click.command()
-@click.argument('input_folderpath', type=click.Path(exists=True))
-@click.argument('output_folderpath', type=click.Path(exists=True))
+@click.argument("input_folderpath", type=click.Path(exists=True))
+@click.argument("output_folderpath", type=click.Path(exists=True))
 def main(input_folderpath, output_folderpath):
-    """ Runs data processing scripts to turn raw data from (../raw) into
-        cleaned data ready to be analyzed (saved in ../processed).
+    """Runs data processing scripts to turn raw data from (../raw) into
+    cleaned data ready to be analyzed (saved in ../processed).
     """
     logger = logging.getLogger(__name__)
-    logger.info('making final data set from raw data')
+    logger.info("making final data set from raw data")
 
     input_folderpath = input_folderpath + "/PetImages"
 
@@ -62,15 +61,19 @@ def main(input_folderpath, output_folderpath):
     test_indices = valid_files[train_size:train_size + test_size]
     valid_indices = valid_files[train_size + val_size:]
 
-    dict_split = {"training": train_indices, "validation": valid_indices, "testing": test_indices}
+    dict_split = {
+        "training": train_indices,
+        "validation": valid_indices,
+        "testing": test_indices,
+    }
 
-    with open(output_folderpath + '/datasplit.json', 'w') as f:
+    with open(output_folderpath + "/datasplit.json", "w") as f:
         json.dump(dict_split, f)
         f.close()
 
 
-if __name__ == '__main__':
-    log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+if __name__ == "__main__":
+    log_fmt = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
     # not used in this stub but often useful for finding various files
