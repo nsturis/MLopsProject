@@ -31,13 +31,13 @@ class Classifier(LightningModule):
                     )
                 )
                 h = compute_conv_dim(
-                    cfg.image.height,
+                    cfg.image.size,
                     conv_layer.kernel_size,
                     conv_layer.padding,
                     conv_layer.stride,
                 )
                 w = compute_conv_dim(
-                    cfg.image.width,
+                    cfg.image.size,
                     conv_layer.kernel_size,
                     conv_layer.padding,
                     conv_layer.stride,
