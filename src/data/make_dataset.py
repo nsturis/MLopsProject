@@ -47,8 +47,12 @@ def main(input_folderpath, output_folderpath):
 
     input_folderpath = input_folderpath + "/PetImages"
 
-    cat_filepath = [Path(p).absolute() for p in glob2.glob(input_folderpath + "/Cat/*.jpg")]
-    dog_filepath = [Path(p).absolute() for p in glob2.glob(input_folderpath + "/Dog/*.jpg")]
+    cat_filepath = [
+        Path(p).absolute() for p in glob2.glob(input_folderpath + "/Cat/*.jpg")
+    ]
+    dog_filepath = [
+        Path(p).absolute() for p in glob2.glob(input_folderpath + "/Dog/*.jpg")
+    ]
 
     valid_files = []
     valid_files = parse_images(cat_filepath, valid_files)
@@ -60,8 +64,8 @@ def main(input_folderpath, output_folderpath):
     test_size = int(test_split * len(valid_files))
     val_size = len(valid_files) - train_size - test_size
     train_indices = valid_files[:train_size]
-    test_indices = valid_files[train_size:train_size + test_size]
-    valid_indices = valid_files[train_size + val_size:]
+    test_indices = valid_files[train_size : train_size + test_size]
+    valid_indices = valid_files[train_size + val_size :]
 
     dict_split = {
         "training": train_indices,

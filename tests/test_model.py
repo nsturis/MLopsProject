@@ -40,10 +40,12 @@ def test_model_structure():
     paths = Paths(
         input_filepath=parameters["paths"]["input_filepath"],
         figures_filepath=parameters["paths"]["figures_filepath"],
-        model_filepath=parameters["paths"]["model_filepath"]
+        model_filepath=parameters["paths"]["model_filepath"],
     )
 
-    cfg = DOGCATConfig(image=img, model=model, conv_layers=conv_layers, maxpool=pool, paths=paths)
+    cfg = DOGCATConfig(
+        image=img, model=model, conv_layers=conv_layers, maxpool=pool, paths=paths
+    )
 
     m = Classifier(cfg)
 
