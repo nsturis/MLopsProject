@@ -62,6 +62,7 @@ WORKDIR /root/MLopsProject
 # RUN python3 -m venv ${VIRUTALENV}
 # ENV PATH="${VIRUTALENV}/bin:$PATH"
 RUN make requirements
-RUN dvc pull
+COPY onyx-glider-337908-7017e9498613.json google_api_key.json
+COPY data/ data/
 RUN make data
 ENTRYPOINT ["make", "train"]
