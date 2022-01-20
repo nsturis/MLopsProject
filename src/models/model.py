@@ -94,8 +94,8 @@ class Classifier(LightningModule):
 
     def forward(self, x):
         if x.ndim != 4:
-            raise ValueError('Expected input to a 4D tensor')
-            
+            raise ValueError("Expected input to a 4D tensor")
+
         for layer in self.layers:
             x = self.maxpool(F.relu(layer(x)))
 
@@ -106,7 +106,7 @@ class Classifier(LightningModule):
     def loss(self, X, y):
         loss = torch.nn.CrossEntropyLoss()
         return loss(X, y)
-    
+
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.cfg.model.lr)
         return optimizer
@@ -140,7 +140,7 @@ class Classifier(LightningModule):
         self.log("test_loss", loss, prog_bar=True)
         self.log("test_accuracy", acc, prog_bar=True)
         return loss
-    
+
     def predict_step(self, batch, batch_idx):
         X, y = batch
         logits = self.forward(X)
