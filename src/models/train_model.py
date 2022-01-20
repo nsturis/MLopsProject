@@ -11,7 +11,7 @@ import hydra
 from hydra.utils import get_original_cwd
 from src.data.dataloader import AnimalDataModule
 from google.cloud import secretmanager
-
+import torch
 register_configs()
 
 
@@ -48,7 +48,8 @@ def main(cfg: DOGCATConfig):
 
     trainer = Trainer(gpus=-1, max_epochs=1, log_every_n_steps=100)
     trainer.fit(model, train_loader, val_loader)
-    trainer.save_checkpoint(get_original_cwd() + "/models/initial_model.ckpt")
+    m = torch.jit.script(model)
+    torch.jit.save(m, get_original_cwd() + "/models/model.pt")
 
 
 if __name__ == "__main__":
