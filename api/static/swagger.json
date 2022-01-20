@@ -1,0 +1,38 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "description": "an API for predicting cats and dogs in images",
+        "version": "1.0.0",
+        "title": "Dog and Cat prediction API"
+    },
+    "paths": {
+        "/predict": {
+            "post": {
+                "summary": "Upload an image for prediction",
+                "requestBody": {
+                    "description": "The file to upload",
+                    "required": true,
+                    "content": {
+                        "image/jpeg": {
+                            "schema": {
+                                "type": "string",
+                                "format": "binary"
+                            }
+                        }
+                    }
+                },
+                "responses":{
+                    "200":{
+                        "content":{
+                            "text/plain":{
+                                "schema":{
+                                    "type":"string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
