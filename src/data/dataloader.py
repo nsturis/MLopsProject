@@ -1,15 +1,12 @@
 import torch
-from torch import nn
 from torch.utils.data import Dataset, DataLoader
 import pytorch_lightning as pl
 import kornia.augmentation as K
 from kornia.geometry.transform import resize
-from kornia.enhance import normalize
 from kornia.utils import image_to_tensor
 import numpy as np
 from PIL import Image
 import json
-import torchvision
 
 
 class DogCatDataset(Dataset):

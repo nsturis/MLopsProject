@@ -1,8 +1,5 @@
-from logging.config import valid_ident
 import os
 import pytest
-import numpy as np
-import torch
 
 from omegaconf import OmegaConf
 

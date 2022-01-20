@@ -1,7 +1,8 @@
-from src.models.model import *
-from src.config import *
+from src.models.model import Classifier
+from src.config import Image, MaxPool, ConvLayer, Model, Paths, DOGCATConfig
 import yaml
 import pytest
+import torch
 
 
 def test_model_structure():

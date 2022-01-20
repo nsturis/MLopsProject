@@ -14,6 +14,7 @@ from google.cloud import secretmanager
 
 register_configs()
 
+
 # data/processed reports/figures models
 @hydra.main(config_path="../conf", config_name="config")
 def main(cfg: DOGCATConfig):

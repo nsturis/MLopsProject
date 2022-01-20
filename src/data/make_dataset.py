@@ -1,23 +1,14 @@
 # -*- coding: utf-8 -*-
-from email import generator
-from os import ftruncate
 import click
 import logging
 from pathlib import Path
 from dotenv import find_dotenv, load_dotenv
 import glob2
-import torch
 import numpy as np
 from PIL import Image
 import PIL
-import kornia as K
-import albumentations as A
-from albumentations.augmentations.geometric import LongestMaxSize
-from albumentations.pytorch.transforms import ToTensorV2
-from src.config import DOGCATConfig
 import random
 import json
-from pathlib import Path
 
 
 def parse_images(file_path, valid_files):
@@ -64,8 +55,8 @@ def main(input_folderpath, output_folderpath):
     test_size = int(test_split * len(valid_files))
     val_size = len(valid_files) - train_size - test_size
     train_indices = valid_files[:train_size]
-    test_indices = valid_files[train_size : train_size + test_size]
-    valid_indices = valid_files[train_size + val_size :]
+    test_indices = valid_files[train_size: train_size + test_size]
+    valid_indices = valid_files[train_size + val_size:]
 
     dict_split = {
         "training": train_indices,
