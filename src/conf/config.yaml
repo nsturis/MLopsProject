@@ -18,6 +18,7 @@ conv_layers:
     kernel_size: 3
     stride: 1
     padding: 1
+<<<<<<< HEAD
     
   - out_channels: 128
     kernel_size: 3
@@ -25,6 +26,8 @@ conv_layers:
     padding: 1
 linear_layer:
   output: 512
+=======
+>>>>>>> 60072233c253b5b2b2801126d56d1919b34f78f9
 
 maxpool:
   kernel_size: 2

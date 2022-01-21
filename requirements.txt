@@ -26,3 +26,6 @@ setuptools==59.5.0
 wandb
 google-cloud-secret-manager
 pytest
+flask
+jsonpickle
+flask-swagger-ui

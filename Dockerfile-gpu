@@ -61,8 +61,8 @@ WORKDIR /root/MLopsProject
 # ENV VIRUTALENV=env
 # RUN python3 -m venv ${VIRUTALENV}
 # ENV PATH="${VIRUTALENV}/bin:$PATH"
+COPY ./entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 RUN make requirements
 COPY onyx-glider-337908-7017e9498613.json google_api_key.json
-COPY data/ data/
-RUN make data
-ENTRYPOINT ["make", "train"]
+ENTRYPOINT ["/entrypoint.sh"]
