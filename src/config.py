@@ -35,6 +35,9 @@ class Model:
     dropout: float
     classes: int
 
+@dataclass
+class LinearLayer:
+    output: int
 
 @dataclass
 class DOGCATConfig:
@@ -43,6 +46,8 @@ class DOGCATConfig:
     conv_layers: List[ConvLayer]
     maxpool: MaxPool
     paths: Paths
+    linear_layer: LinearLayer
+
 
 
 def register_configs() -> None:
