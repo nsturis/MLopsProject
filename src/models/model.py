@@ -83,9 +83,14 @@ class Classifier(LightningModule):
             self.cfg.maxpool.stride,
             padding=self.cfg.maxpool.padding,
         )
+        self.l1 = nn.Linear(
+            in_features=self.l1_in_features,
+            out_features=self.cfg.linear_layer.output,
+            bias=True 
+        )
 
         self.out = nn.Linear(
-            in_features=self.l1_in_features,
+            in_features=self.cfg.linear_layer.output,
             out_features=self.cfg.model.classes,
             bias=True,
         )
@@ -100,6 +105,9 @@ class Classifier(LightningModule):
             x = self.maxpool(F.relu(layer(x)))
 
         x = x.view(-1, self.l1_in_features)
+
+        x = F.relu(self.l1(x))
+        x = self.dropout(x)
 
         return F.softmax(self.out(x), dim=1)
 

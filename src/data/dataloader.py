@@ -45,17 +45,16 @@ class AnimalDataModule(pl.LightningDataModule):
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.train_transform = K.container.AugmentationSequential(
-            K.RandomResizedCrop(
-                p=0.5, size=(self.image_size, self.image_size), scale=(0.6, 0.6)
-            ),
-            K.RandomHorizontalFlip(p=0.5),
-            K.RandomChannelShuffle(p=0.5),
-            K.RandomPerspective(p=0.5),
-            K.RandomRotation(p=0.5, degrees=45),
             K.Normalize(torch.zeros(1), torch.tensor([255])),
+            # K.RandomResizedCrop(
+            #     p=0.5, size=(self.image_size, self.image_size), scale=(0.6, 0.6)
+            # ),
+            K.RandomHorizontalFlip(p=0.5),
+            # K.RandomChannelShuffle(p=0.5),
+            #K.RandomPerspective(p=0.5),
+            K.RandomRotation(p=0.5, degrees=15),
             data_keys=["input"],
             return_transform=False,
-            same_on_batch=False,
             keepdim=True,
         )
 

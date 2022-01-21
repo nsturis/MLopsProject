@@ -45,8 +45,10 @@ def predict():
     img = Image.open(io.BytesIO(request.data))
     img = np.array(img)
     img = process_image(img)
-    pred = torch.argmax(m(img))
-    response = {"message": f"Well isn't that a cute {decoder[pred.item()]}"}
+    logits = m(img)
+    pred = torch.argmax(logits) 
+    
+    response = {"message": f"Well isn't that a cute {decoder[pred.item()]}", "probabilities":{"cat":logits[0][1].item(), "dog":logits[0][0].item()}} 
     response_pickle = jsonpickle.encode(response)
     return Response(response=response_pickle, status=200, mimetype="application/json")
 
