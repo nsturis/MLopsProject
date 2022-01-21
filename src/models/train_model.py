@@ -48,11 +48,7 @@ def main(cfg: DOGCATConfig):
 
     model = Classifier(cfg)
 
-<<<<<<< HEAD
     trainer = Trainer(gpus=-1, max_epochs=100, log_every_n_steps=100, logger=wandb_logger)
-=======
-    trainer = Trainer(gpus=0, max_epochs=30, log_every_n_steps=100)
->>>>>>> 60072233c253b5b2b2801126d56d1919b34f78f9
     trainer.fit(model, train_loader, val_loader)
     m = torch.jit.script(model)
     torch.jit.save(m, get_original_cwd() + "/src/models/model_100_epoch_speedrun.pt")
