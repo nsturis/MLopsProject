@@ -1,5 +1,5 @@
 from src.models.model import Classifier
-from src.config import Image, MaxPool, ConvLayer, Model, Paths, DOGCATConfig
+from src.config import Image, MaxPool, ConvLayer, Model, Paths, LinearLayer, DOGCATConfig
 import yaml
 import pytest
 import torch
@@ -44,8 +44,10 @@ def test_model_structure():
         model_filepath=parameters["paths"]["model_filepath"],
     )
 
+    linear_layer = LinearLayer(output=parameters["linear_layer"]["output"])
+
     cfg = DOGCATConfig(
-        image=img, model=model, conv_layers=conv_layers, maxpool=pool, paths=paths
+        image=img, model=model, conv_layers=conv_layers, maxpool=pool, paths=paths, linear_layer=linear_layer
     )
 
     m = Classifier(cfg)
