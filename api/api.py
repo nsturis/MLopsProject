@@ -41,7 +41,7 @@ def predict():
         0: "dog",
         1: "cat"
     } 
-    m = torch.jit.load('api/model.pt')
+    m = torch.jit.load('models/model_bigboy.pt')
     img = Image.open(io.BytesIO(request.data))
     img = np.array(img)
     img = process_image(img)

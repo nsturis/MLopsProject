@@ -46,7 +46,7 @@ def main(cfg: DOGCATConfig):
 
     model = Classifier(cfg)
 
-    trainer = Trainer(gpus=-1, max_epochs=1, log_every_n_steps=100)
+    trainer = Trainer(gpus=0, max_epochs=30, log_every_n_steps=100)
     trainer.fit(model, train_loader, val_loader)
     m = torch.jit.script(model)
     torch.jit.save(m, get_original_cwd() + "/models/model.pt")
