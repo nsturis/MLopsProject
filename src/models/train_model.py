@@ -12,6 +12,7 @@ from hydra.utils import get_original_cwd
 from src.data.dataloader import AnimalDataModule
 from google.cloud import secretmanager
 import torch
+import wandb
 register_configs()
 
 
@@ -21,6 +22,7 @@ def main(cfg: DOGCATConfig):
     print("Training day and night")
 
     print(cfg)
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = get_original_cwd()+'/onyx-glider-337908-7017e9498613.json'
     PROJECT_ID = "onyx-glider-337908"
     secrets = secretmanager.SecretManagerServiceClient()
     WANDB_KEY = secrets.access_secret_version(
@@ -29,7 +31,7 @@ def main(cfg: DOGCATConfig):
     os.environ["WANDB_API_KEY"] = WANDB_KEY
 
     wandb_logger = WandbLogger(
-        project="MLOps", entity="mlops_flajn", name="Initial tests"
+        project="MLOps", entity="mlops_flajn", name="100 epoch speedrun"
     )
     wandb_logger.experiment.config.update(cfg)
 
@@ -37,7 +39,7 @@ def main(cfg: DOGCATConfig):
         batch_size=cfg.model.batch_size,
         data_dir=get_original_cwd() + "/" + cfg.paths.input_filepath,
         image_size=cfg.image.size,
-        num_workers=os.cpu_count(),
+        num_workers=12,
     )
     train_loader, val_loader = (
         data_module.train_dataloader(),
@@ -46,10 +48,10 @@ def main(cfg: DOGCATConfig):
 
     model = Classifier(cfg)
 
-    trainer = Trainer(gpus=-1, max_epochs=1, log_every_n_steps=100)
+    trainer = Trainer(gpus=-1, max_epochs=100, log_every_n_steps=100, logger=wandb_logger)
     trainer.fit(model, train_loader, val_loader)
     m = torch.jit.script(model)
-    torch.jit.save(m, get_original_cwd() + "/models/model.pt")
+    torch.jit.save(m, get_original_cwd() + "/src/models/model_100_epoch_speedrun.pt")
 
 
 if __name__ == "__main__":

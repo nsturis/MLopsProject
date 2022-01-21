@@ -14,19 +14,21 @@ model:
   classes: 2
 
 conv_layers:
-  - out_channels: 16
+  - out_channels: 64
     kernel_size: 3
     stride: 1
     padding: 1
     
-  - out_channels: 32
+  - out_channels: 128
     kernel_size: 3
     stride: 1
     padding: 1
+linear_layer:
+  output: 512
 
 maxpool:
-  kernel_size: 3
-  stride: 1
+  kernel_size: 2
+  stride: 2
   padding: 1
 
 HYDRA_FULL_ERROR: 1
